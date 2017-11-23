@@ -11,16 +11,15 @@ import (
 	"html/template"
 )
 type Information struct {
-	Name      string
-	Phone		 string
-	Date			string
+	Name    string
+	Phone	string
+	Date	string
 }
 type Temp struct {
-	All			[]Information
+	All	[]Information
 }
 
 func jsHandler(formatter *render.Render) http.HandlerFunc {
-	
 		return func(w http.ResponseWriter, req *http.Request) {
 			formatter.JSON(w, http.StatusOK, struct {
 				ID      string `json:"id"`
@@ -30,10 +29,9 @@ func jsHandler(formatter *render.Render) http.HandlerFunc {
 		
 	}
 
-	func unknownHandler(w http.ResponseWriter, req *http.Request) {
-		http.Error(w, "501 Not Implemented", http.StatusNotImplemented)
-		
-	}
+func unknownHandler(w http.ResponseWriter, req *http.Request) {
+	http.Error(w, "501 Not Implemented", http.StatusNotImplemented)	
+}
 
 func reserve(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("method:", r.Method) //获取请求的方法
@@ -69,7 +67,7 @@ func reserve(w http.ResponseWriter, r *http.Request) {
 		var size = len(ns)
 		println(size)
 		var temp Temp
-    for i := 0; i < size; i++ {
+    		for i := 0; i < size; i++ {
 			temp.All = append(temp.All, Information{Name: ns[i], Phone:ps[i], Date:ds[i]})
 
 		}
@@ -112,6 +110,5 @@ func initRoutes(mx *mux.Router, formatter *render.Render) {
 	mx.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(webRoot+"/assets/"))))
 	mx.HandleFunc("/", jsHandler(formatter)).Methods("GET")
 	mx.HandleFunc("/unknown", unknownHandler)
-	//mx.PathPrefix("/").Handler(http.FileServer(http.Dir(webRoot + "/assets/")))
 	mx.HandleFunc("/reserve", reserve)
 }
